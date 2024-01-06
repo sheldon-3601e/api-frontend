@@ -29,9 +29,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePageInterfaceInfoVO = {
+  type BaseResponsePageInterfaceInfo = {
     code?: number;
-    data?: PageInterfaceInfoVO;
+    data?: PageInterfaceInfo;
     message?: string;
   };
 
@@ -110,6 +110,21 @@ declare namespace API {
     id: string;
   };
 
+  type InterfaceInfo = {
+    id?: string;
+    name?: string;
+    description?: string;
+    url?: string;
+    requestHeader?: string;
+    responseHeader?: string;
+    statue?: number;
+    method?: string;
+    userId?: string;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+  };
+
   type InterfaceInfoAddRequest = {
     name?: string;
     description?: string;
@@ -173,8 +188,8 @@ declare namespace API {
     asc?: boolean;
   };
 
-  type PageInterfaceInfoVO = {
-    records?: InterfaceInfoVO[];
+  type PageInterfaceInfo = {
+    records?: InterfaceInfo[];
     total?: string;
     size?: string;
     current?: string;

@@ -2,12 +2,12 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 此处后端没有提供注释 POST /interfaceInfo/add */
+/** 此处后端没有提供注释 POST /api/interfaceInfo/add */
 export async function addInterfaceInfo(
   body: API.InterfaceInfoAddRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseLong>('/interfaceInfo/add', {
+  return request<API.BaseResponseLong>('/api/interfaceInfo/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,12 +17,12 @@ export async function addInterfaceInfo(
   });
 }
 
-/** 此处后端没有提供注释 POST /interfaceInfo/delete */
+/** 此处后端没有提供注释 POST /api/interfaceInfo/delete */
 export async function deleteInterfaceInfo(
   body: API.DeleteRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseBoolean>('/interfaceInfo/delete', {
+  return request<API.BaseResponseBoolean>('/api/interfaceInfo/delete', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,13 +32,13 @@ export async function deleteInterfaceInfo(
   });
 }
 
-/** 此处后端没有提供注释 GET /interfaceInfo/get/vo */
+/** 此处后端没有提供注释 GET /api/interfaceInfo/get/vo */
 export async function getInterfaceInfoVoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getInterfaceInfoVOByIdParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseInterfaceInfoVO>('/interfaceInfo/get/vo', {
+  return request<API.BaseResponseInterfaceInfoVO>('/api/interfaceInfo/get/vo', {
     method: 'GET',
     params: {
       ...params,
@@ -47,12 +47,12 @@ export async function getInterfaceInfoVoById(
   });
 }
 
-/** 此处后端没有提供注释 POST /interfaceInfo/list/page/vo */
-export async function listInterfaceInfoVoByPage(
+/** 此处后端没有提供注释 POST /api/interfaceInfo/list/page/vo */
+export async function listInterfaceInfoByPage(
   body: API.InterfaceInfoQueryRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponsePageInterfaceInfoVO>('/interfaceInfo/list/page/vo', {
+  return request<API.BaseResponsePageInterfaceInfo>('/api/interfaceInfo/list/page', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,12 +62,12 @@ export async function listInterfaceInfoVoByPage(
   });
 }
 
-/** 此处后端没有提供注释 POST /interfaceInfo/update */
+/** 此处后端没有提供注释 POST /api/interfaceInfo/update */
 export async function updateInterfaceInfo(
   body: API.InterfaceInfoUpdateRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseBoolean>('/interfaceInfo/update', {
+  return request<API.BaseResponseBoolean>('/api/interfaceInfo/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
