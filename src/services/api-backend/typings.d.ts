@@ -5,12 +5,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseInteger = {
-    code?: number;
-    data?: number;
-    message?: string;
-  };
-
   type BaseResponseInterfaceInfoVO = {
     code?: number;
     data?: InterfaceInfoVO;
@@ -81,13 +75,6 @@ declare namespace API {
     code?: number;
     data?: UserVO;
     message?: string;
-  };
-
-  type checkParams = {
-    timestamp: string;
-    nonce: string;
-    signature: string;
-    echostr: string;
   };
 
   type DeleteRequest = {
@@ -284,19 +271,6 @@ declare namespace API {
     tags?: string[];
   };
 
-  type PostFavourAddRequest = {
-    postId?: string;
-  };
-
-  type PostFavourQueryRequest = {
-    current?: number;
-    pageSize?: number;
-    sortField?: string;
-    sortOrder?: string;
-    postQueryRequest?: PostQueryRequest;
-    userId?: string;
-  };
-
   type PostQueryRequest = {
     current?: number;
     pageSize?: number;
@@ -311,10 +285,6 @@ declare namespace API {
     orTags?: string[];
     userId?: string;
     favourUserId?: string;
-  };
-
-  type PostThumbAddRequest = {
-    postId?: string;
   };
 
   type PostUpdateRequest = {

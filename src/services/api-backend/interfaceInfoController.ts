@@ -47,7 +47,7 @@ export async function getInterfaceInfoVoById(
   });
 }
 
-/** 此处后端没有提供注释 POST /api/interfaceInfo/list/page/vo */
+/** 此处后端没有提供注释 POST /api/interfaceInfo/list/page */
 export async function listInterfaceInfoByPage(
   body: API.InterfaceInfoQueryRequest,
   options?: { [key: string]: any },
