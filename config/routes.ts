@@ -35,22 +35,23 @@ export default [
     access: 'canAdmin',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        name: '接口管理',
+        icon: 'table',
+        path: '/admin/interface_info',
+        component: './interfaceInfo',
       },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
-      },
+      // {
+      //   path: '/admin',
+      //   redirect: '/admin/sub-page',
+      // },
+      // {
+      //   path: '/admin/sub-page',
+      //   name: 'sub-page',
+      //   component: './Admin',
+      // },
     ],
   },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
+
   {
     path: '/',
     redirect: '/welcome',
