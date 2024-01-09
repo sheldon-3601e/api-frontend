@@ -5,9 +5,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseInterfaceInfoVO = {
+  type BaseResponseInterfaceInfo = {
     code?: number;
-    data?: InterfaceInfoVO;
+    data?: InterfaceInfo;
     message?: string;
   };
 
@@ -20,6 +20,12 @@ declare namespace API {
   type BaseResponseLong = {
     code?: number;
     data?: string;
+    message?: string;
+  };
+
+  type BaseResponseObject = {
+    code?: number;
+    data?: Record<string, any>;
     message?: string;
   };
 
@@ -97,11 +103,16 @@ declare namespace API {
     id: string;
   };
 
+  type IdRequest = {
+    id?: string;
+  };
+
   type InterfaceInfo = {
     id?: string;
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     statue?: number;
@@ -116,9 +127,15 @@ declare namespace API {
     name?: string;
     description?: string;
     url?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     method?: string;
+  };
+
+  type InterfaceInfoInvokeRequest = {
+    id?: string;
+    requestParams?: string;
   };
 
   type InterfaceInfoQueryRequest = {
@@ -141,23 +158,12 @@ declare namespace API {
     id?: string;
     name?: string;
     description?: string;
+    requestParams?: string;
     url?: string;
     requestHeader?: string;
     responseHeader?: string;
     statue?: number;
     method?: string;
-  };
-
-  type InterfaceInfoVO = {
-    id?: string;
-    name?: string;
-    description?: string;
-    url?: string;
-    requestHeader?: string;
-    responseHeader?: string;
-    statue?: number;
-    method?: string;
-    userId?: string;
   };
 
   type LoginUserVO = {
@@ -321,6 +327,8 @@ declare namespace API {
     id?: string;
     userAccount?: string;
     userPassword?: string;
+    accessKey?: string;
+    secretKey?: string;
     unionId?: string;
     mpOpenId?: string;
     userName?: string;

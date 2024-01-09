@@ -32,17 +32,32 @@ export async function deleteInterfaceInfo(
   });
 }
 
-/** 此处后端没有提供注释 GET /api/interfaceInfo/get/vo */
+/** 此处后端没有提供注释 GET /api/interfaceInfo/get/item */
 export async function getInterfaceInfoVoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getInterfaceInfoVOByIdParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseInterfaceInfoVO>('/api/interfaceInfo/get/vo', {
+  return request<API.BaseResponseInterfaceInfo>('/api/interfaceInfo/get/item', {
     method: 'GET',
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /api/interfaceInfo/invoke */
+export async function invokeInterfaceInfo(
+  body: API.InterfaceInfoInvokeRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseObject>('/api/interfaceInfo/invoke', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }
@@ -53,6 +68,30 @@ export async function listInterfaceInfoByPage(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageInterfaceInfo>('/api/interfaceInfo/list/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /api/interfaceInfo/offline */
+export async function offlineInterfaceInfo(body: API.IdRequest, options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean>('/api/interfaceInfo/offline', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /api/interfaceInfo/online */
+export async function onlineInterfaceInfo(body: API.IdRequest, options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean>('/api/interfaceInfo/online', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

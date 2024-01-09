@@ -20,7 +20,7 @@ export async function getInitialState(): Promise<InitialState> {
   };
 
   const res = await getLoginUser();
-  console.log('res', res);
+  // console.log('res', res);
 
   if (res.data) {
     state.loginUser = res.data;

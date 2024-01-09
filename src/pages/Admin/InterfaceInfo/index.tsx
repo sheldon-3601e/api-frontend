@@ -1,10 +1,9 @@
-import CreateModal from '@/pages/interfaceInfo/components/CreateModal';
-import UpdateModal from '@/pages/interfaceInfo/components/UpdateModal';
-import { updateRule } from '@/services/ant-design-pro/api';
+import CreateModal from '@/pages/Admin/InterfaceInfo/components/CreateModal';
+import UpdateModal from '@/pages/Admin/InterfaceInfo/components/UpdateModal';
 import {
   addInterfaceInfo,
   deleteInterfaceInfo,
-  listInterfaceInfoByPage,
+  listInterfaceInfoByPage, offlineInterfaceInfo, onlineInterfaceInfo,
   updateInterfaceInfo,
 } from '@/services/api-backend/interfaceInfoController';
 import { PlusOutlined } from '@ant-design/icons';
@@ -116,6 +115,58 @@ const TableList: React.FC = () => {
   };
 
   /**
+   *  online node
+   * @zh-CN 上线节点
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('正在上线');
+    if (!record) {
+      return true;
+    }
+    try {
+      await onlineInterfaceInfo({
+        id: record.id,
+      });
+      hide();
+      message.success('online successfully');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('online failed, ' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  offline node
+   * @zh-CN 下线节点
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('正在下线');
+    if (!record) {
+      return true;
+    }
+    try {
+      await offlineInterfaceInfo({
+        id: record.id,
+      });
+      hide();
+      message.success('offline successfully');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('offline failed, ' + error.message);
+      return false;
+    }
+  };
+
+  /**
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
@@ -148,6 +199,11 @@ const TableList: React.FC = () => {
       valueType: 'text',
     },
     {
+      title: '请求参数',
+      dataIndex: 'requestParams',
+      valueType: 'textarea',
+    },
+    {
       title: '请求头',
       dataIndex: 'requestHeader',
       valueType: 'textarea',
@@ -159,7 +215,7 @@ const TableList: React.FC = () => {
     },
     {
       title: '状态',
-      dataIndex: 'status',
+      dataIndex: 'statue',
       valueEnum: {
         0: {
           text: '禁用',
@@ -189,6 +245,21 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
+        record.statue === 1 ? <a
+          key="config"
+          onClick={() => {
+            handleOffline(record)
+          }}
+        >
+          下线
+        </a> : <a
+          key="config"
+          onClick={() => {
+            handleOnline(record)
+          }}
+        >
+          上线
+        </a>,
         <a
           key="update"
           onClick={() => {
@@ -198,14 +269,16 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        <a
+        <Button
+          type="text"
           key="delete"
+          danger
           onClick={() => {
             handleRemove(record);
           }}
         >
           删除
-        </a>,
+        </Button>,
       ],
     },
   ];
@@ -233,7 +306,7 @@ const TableList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
           </Button>,
         ]}
-        request={async (params, sort, filter) => {
+        request={async (params) => {
           const res = await listInterfaceInfoByPage({
             ...params,
           });

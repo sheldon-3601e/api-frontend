@@ -21,7 +21,7 @@ const CreateModel: React.FC<props> = (props) => {
     }
   }, [values]);
 
-  console.log('received: ', values);
+  // console.log('received: ', values);
 
   return (
     <Modal visible={visible} footer={null} onCancel={onCancel}>
