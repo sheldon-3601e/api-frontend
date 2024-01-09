@@ -9,7 +9,7 @@ const Settings: ProLayoutProps & {
 } = {
   navTheme: 'light',
   // 拂晓蓝
-  colorPrimary: '#1890ff',
+  colorPrimary: '#d4eaf7',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
@@ -17,9 +17,9 @@ const Settings: ProLayoutProps & {
   colorWeak: false,
   splitMenus: false,
   siderMenuType: "sub",
-  title: 'Interface-Manager',
+  title: 'API-Manager',
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://gitee.com/sheldon_kkk/typora-image/raw/master/img/202401092321912.png',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式
