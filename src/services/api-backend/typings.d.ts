@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListInterfaceInfoAnalysisVO = {
+    code?: number;
+    data?: InterfaceInfoAnalysisVO[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO = {
     code?: number;
     data?: LoginUserVO;
@@ -35,33 +41,21 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePagePost = {
-    code?: number;
-    data?: PagePost;
-    message?: string;
-  };
-
-  type BaseResponsePagePostVO = {
-    code?: number;
-    data?: PagePostVO;
-    message?: string;
-  };
-
   type BaseResponsePageUser = {
     code?: number;
     data?: PageUser;
     message?: string;
   };
 
-  type BaseResponsePageUserVO = {
+  type BaseResponsePageUserInterfaceInfo = {
     code?: number;
-    data?: PageUserVO;
+    data?: PageUserInterfaceInfo;
     message?: string;
   };
 
-  type BaseResponsePostVO = {
+  type BaseResponsePageUserVO = {
     code?: number;
-    data?: PostVO;
+    data?: PageUserVO;
     message?: string;
   };
 
@@ -74,6 +68,12 @@ declare namespace API {
   type BaseResponseUser = {
     code?: number;
     data?: User;
+    message?: string;
+  };
+
+  type BaseResponseUserInterfaceInfo = {
+    code?: number;
+    data?: UserInterfaceInfo;
     message?: string;
   };
 
@@ -91,11 +91,11 @@ declare namespace API {
     id: string;
   };
 
-  type getPostVOByIdParams = {
+  type getUserByIdParams = {
     id: string;
   };
 
-  type getUserByIdParams = {
+  type getUserInterfaceInfoVOByIdParams = {
     id: string;
   };
 
@@ -131,6 +131,23 @@ declare namespace API {
     requestHeader?: string;
     responseHeader?: string;
     method?: string;
+  };
+
+  type InterfaceInfoAnalysisVO = {
+    id?: string;
+    name?: string;
+    description?: string;
+    url?: string;
+    requestParams?: string;
+    requestHeader?: string;
+    responseHeader?: string;
+    statue?: number;
+    method?: string;
+    userId?: string;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+    totalNum?: number;
   };
 
   type InterfaceInfoInvokeRequest = {
@@ -195,36 +212,22 @@ declare namespace API {
     pages?: string;
   };
 
-  type PagePost = {
-    records?: Post[];
-    total?: string;
-    size?: string;
-    current?: string;
-    orders?: OrderItem[];
-    optimizeCountSql?: boolean;
-    searchCount?: boolean;
-    optimizeJoinOfCountSql?: boolean;
-    countId?: string;
-    maxLimit?: string;
-    pages?: string;
-  };
-
-  type PagePostVO = {
-    records?: PostVO[];
-    total?: string;
-    size?: string;
-    current?: string;
-    orders?: OrderItem[];
-    optimizeCountSql?: boolean;
-    searchCount?: boolean;
-    optimizeJoinOfCountSql?: boolean;
-    countId?: string;
-    maxLimit?: string;
-    pages?: string;
-  };
-
   type PageUser = {
     records?: User[];
+    total?: string;
+    size?: string;
+    current?: string;
+    orders?: OrderItem[];
+    optimizeCountSql?: boolean;
+    searchCount?: boolean;
+    optimizeJoinOfCountSql?: boolean;
+    countId?: string;
+    maxLimit?: string;
+    pages?: string;
+  };
+
+  type PageUserInterfaceInfo = {
+    records?: UserInterfaceInfo[];
     total?: string;
     size?: string;
     current?: string;
@@ -249,70 +252,6 @@ declare namespace API {
     countId?: string;
     maxLimit?: string;
     pages?: string;
-  };
-
-  type Post = {
-    id?: string;
-    title?: string;
-    content?: string;
-    tags?: string;
-    thumbNum?: number;
-    favourNum?: number;
-    userId?: string;
-    createTime?: string;
-    updateTime?: string;
-    isDelete?: number;
-  };
-
-  type PostAddRequest = {
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostEditRequest = {
-    id?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostQueryRequest = {
-    current?: number;
-    pageSize?: number;
-    sortField?: string;
-    sortOrder?: string;
-    id?: string;
-    notId?: string;
-    searchText?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-    orTags?: string[];
-    userId?: string;
-    favourUserId?: string;
-  };
-
-  type PostUpdateRequest = {
-    id?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostVO = {
-    id?: string;
-    title?: string;
-    content?: string;
-    thumbNum?: number;
-    favourNum?: number;
-    userId?: string;
-    createTime?: string;
-    updateTime?: string;
-    tagList?: string[];
-    user?: UserVO;
-    hasThumb?: boolean;
-    hasFavour?: boolean;
   };
 
   type uploadFileParams = {
@@ -345,6 +284,45 @@ declare namespace API {
     userAccount?: string;
     userAvatar?: string;
     userRole?: string;
+  };
+
+  type UserInterfaceInfo = {
+    id?: string;
+    userId?: string;
+    interfaceInfoId?: string;
+    totalNum?: number;
+    leftNum?: number;
+    statue?: number;
+    createTime?: string;
+    updateTime?: string;
+    isDelete?: number;
+  };
+
+  type UserInterfaceInfoAddRequest = {
+    userId?: string;
+    interfaceInfoId?: string;
+    totalNum?: number;
+    leftNum?: number;
+  };
+
+  type UserInterfaceInfoQueryRequest = {
+    current?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: string;
+    id?: string;
+    userId?: string;
+    interfaceInfoId?: string;
+    totalNum?: number;
+    leftNum?: number;
+    statue?: number;
+  };
+
+  type UserInterfaceInfoUpdateRequest = {
+    id?: string;
+    totalNum?: number;
+    leftNum?: number;
+    statue?: number;
   };
 
   type userLoginByWxOpenParams = {

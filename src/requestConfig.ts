@@ -1,6 +1,5 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
-import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -25,8 +24,7 @@ interface ResponseStructure {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const requestConfig: RequestConfig = {
-
-  baseURL: 'http://localhost:8101',
+  baseURL: 'http://localhost:8101/api',
   withCredentials: true,
 
   // 请求拦截器
@@ -44,10 +42,9 @@ export const requestConfig: RequestConfig = {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
 
-
-      console.log(data)
+      console.log(data);
       if (data.code !== 0) {
-        throw new Error("请求失败: " + data.message)
+        throw new Error('请求失败: ' + data.message);
       }
       return response;
     },

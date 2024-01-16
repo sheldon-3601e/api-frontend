@@ -1,8 +1,8 @@
 import { useIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
-import defaultSettings from '../config/defaultSettings';
+import mySettings from '../config/mySettings';
 
-const { pwa } = defaultSettings;
+const { pwa } = mySettings;
 const isHttps = document.location.protocol === 'https:';
 
 const clearCache = () => {

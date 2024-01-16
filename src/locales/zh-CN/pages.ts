@@ -9,7 +9,7 @@ export default {
   'pages.login.password.placeholder': '请输入密码',
   'pages.login.password.required': '密码是必填项！',
   'pages.login.password.again.required': '再次填写密码！',
-  'pages.login.userRegister.tab': '注册',
+  'pages.login.userRegister': '注册',
   'pages.login.phoneLogin.errorMessage': '验证码错误',
   'pages.login.register.userAccount.placeholder': '请输入用户名！',
   'pages.login.register.password.placeholder': '请输入密码！',

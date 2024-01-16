@@ -1,92 +1,37 @@
 import Footer from '@/components/Footer';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import { userLogin } from '@/services/api-backend/userController';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { userLogin, userRegister } from '@/services/api-backend/userController';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ModalForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { ProFormInstance } from '@ant-design/pro-form/lib';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
-import React, {useRef, useState} from 'react';
+import { FormattedMessage, Helmet, history, useIntl, useModel } from '@umijs/max';
+import { message } from 'antd';
+import React, { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import Settings from '../../../../config/defaultSettings';
-import {highestPort} from "@umijs/utils/compiled/portfinder";
+import Settings from '../../../../config/mySettings';
+// import './index.scss'
 
-const ActionIcons = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      '&:hover': {
-        color: token.colorPrimaryActive,
-      },
-    };
-  });
-
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={langClassName} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={langClassName} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={langClassName} />
-    </>
-  );
-};
-
-const Lang = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-
-  return (
-    <div className={langClassName} data-lang>
-      {SelectLang && <SelectLang />}
-    </div>
-  );
-};
-
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
+// 定义表单布局的常量 formLayout
+const formLayout = {
+  // 设置标签布局，分别指定在不同屏幕尺寸下的列数
+  labelCol: {
+    // 在小屏幕下（xs），标签占据整行的 24 列
+    xs: { span: 24 },
+    // 在中等屏幕尺寸下（sm），标签占据 8 列
+    sm: { span: 8 },
+  },
+  // 设置表单项内容布局，同样分别指定在不同屏幕尺寸下的列数
+  wrapperCol: {
+    // 在小屏幕下（xs），表单项内容占据整行的 24 列
+    xs: { span: 12 },
+    // 在中等屏幕尺寸下（sm），表单项内容占据 16 列
+    sm: { span: 10 },
+  },
 };
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('login');
+  // const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [registerModalVisit, setRegisterModalVisit] = useState(false);
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const containerClassName = useEmotionCss(() => {
@@ -102,13 +47,19 @@ const Login: React.FC = () => {
 
   const intl = useIntl();
 
+  // 异步函数 fetchUserInfo 用于获取用户信息
   const fetchUserInfo = async () => {
+    // 调用 initialState 中的 fetchUserInfo 方法，获取用户信息
     const userInfo = await initialState?.fetchUserInfo?.();
+
+    // 如果成功获取到用户信息
     if (userInfo) {
+      // 使用 flushSync 来同步更新状态，确保状态更新发生在浏览器绘制之前
       flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
+        // 使用 setInitialState 更新应用程序状态，将 currentUser 设置为新获取的用户信息
+        setInitialState((res) => ({
+          ...res,
+          loginUser: userInfo,
         }));
       });
     }
@@ -122,10 +73,7 @@ const Login: React.FC = () => {
       });
 
       if (res.data) {
-        setInitialState({
-          loginUser: res.data,
-        });
-
+        await fetchUserInfo();
         setTimeout(() => {
           const urlParams = new URL(window.location.href).searchParams;
           // console.log(urlParams.get('redirect') || '/');
@@ -139,16 +87,34 @@ const Login: React.FC = () => {
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
       });
       // console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+  const handleRegister = async (value: any) => {
+    // console.log(value);
+    const res = await userRegister({
+      ...value,
+    });
+    // console.log(res)
+    if (res.code === 0) {
+      message.success('注册成功');
+      setRegisterModalVisit(false);
+    } else {
+      message.error(res.message);
+    }
+  };
+
+  const [autoCompleteResult] = useState<string[]>([]);
+  autoCompleteResult.map((website) => ({
+    label: website,
+    value: website,
+  }));
+
+  const restFormRef = useRef<ProFormInstance>();
 
   return (
-
     <div className={containerClassName}>
       <Helmet>
         <title>
@@ -159,7 +125,6 @@ const Login: React.FC = () => {
           - {Settings.title}
         </title>
       </Helmet>
-      <Lang />
       <div
         style={{
           flex: '1',
@@ -171,7 +136,7 @@ const Login: React.FC = () => {
             minWidth: 280,
             maxWidth: '75vw',
           }}
-          logo={<img alt="logo" src="/logo.png" style={{ width: '70px'}}/>}
+          logo={<img alt="logo" src="/logo.png" style={{ width: '55px' }} />}
           title="API-Manager"
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{
@@ -181,161 +146,47 @@ const Login: React.FC = () => {
             await handleSubmit(values as API.UserLoginRequest);
           }}
         >
-          <Tabs
-            activeKey={type}
-            onChange={setType}
-            centered
-            items={[
-              {
-                key: 'login',
-                label: intl.formatMessage({
-                  id: 'pages.login.accountLogin.tab',
-                  defaultMessage: '登录',
-                }),
-              },
-              {
-                key: 'register',
-                label: intl.formatMessage({
-                  id: 'pages.login.userRegister.tab',
-                  defaultMessage: '注册',
-                }),
-              },
-            ]}
-          />
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误',
+          <>
+            <ProFormText
+              name="userAccount"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined />,
+              }}
+              placeholder={intl.formatMessage({
+                id: 'pages.login.username.placeholder',
+                defaultMessage: '用户名: Admin or user',
               })}
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="pages.login.username.required"
+                      defaultMessage="请输入用户名!"
+                    />
+                  ),
+                },
+              ]}
             />
-          )}
-          {type === 'login' && (
-            <>
-              <ProFormText
-                name="userAccount"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: Admin or user',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="userPassword"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )}
+            <ProFormText.Password
+              name="userPassword"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              placeholder={intl.formatMessage({
+                id: 'pages.login.password.placeholder',
+              })}
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="pages.login.password.required" />,
+                },
+              ]}
+            />
+          </>
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
-          {type === 'register' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined />,
-                }}
-                name="register"
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.register.userAccount.placeholder',
-                  defaultMessage: '手机号',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.userAccount.required"
-                      />
-                    ),
-                  },
-                  {
-                    pattern: /^[a-zA-Z0-9_-]{4,16}$/,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.userAccount.invalid"
-                        defaultMessage="用户名格式错误！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-
-              <ProFormText.Password
-                name="userPassword"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="userPasswordAgain"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.again.required',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-
-          )}
           <div
             style={{
               marginBottom: 24,
@@ -348,11 +199,101 @@ const Login: React.FC = () => {
               style={{
                 float: 'right',
               }}
+              onClick={() => {
+                setRegisterModalVisit(true);
+              }}
             >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+              <FormattedMessage id="pages.login.userRegister" />
             </a>
           </div>
         </LoginForm>
+        <>
+          <ModalForm
+            title="注冊用戶"
+            {...formLayout}
+            formRef={restFormRef}
+            layout="horizontal"
+            submitter={{
+              searchConfig: {
+                resetText: '重置',
+              },
+              resetButtonProps: {
+                onClick: () => {
+                  restFormRef.current?.resetFields();
+                },
+              },
+            }}
+            open={registerModalVisit}
+            onFinish={async (value) => {
+              await handleRegister(value);
+              restFormRef.current?.resetFields();
+              return true;
+            }}
+            onOpenChange={setRegisterModalVisit}
+          >
+            <ProFormText
+              name="userAccount"
+              label="用户名"
+              rules={[
+                {
+                  pattern: /^[a-zA-Z0-9_-]{4,16}$/,
+                  message: '用户名必须是4到16位（字母，数字，下划线，减号）',
+                },
+                {
+                  required: true,
+                  message: '请输入你的用户名!',
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="userPassword"
+              label="密码"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码!',
+                },
+                {
+                  pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                  message: '密码必须是8位以上，包含字母、数字',
+                },
+              ]}
+              hasFeedback
+            />
+            <ProFormText.Password
+              name="checkPassword"
+              label="确认密码"
+              dependencies={['userPassword']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: '请确认密码!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('userPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('密码不一致!'));
+                  },
+                }),
+              ]}
+            />
+            <ProFormCheckbox
+              name="agreement"
+              valuePropName="checked"
+              rules={[
+                {
+                  validator: (_, value) =>
+                    value ? Promise.resolve() : Promise.reject(new Error('请您阅读并同意协议!')),
+                },
+              ]}
+            >
+              我已 阅读 <a href="">agreement</a>
+            </ProFormCheckbox>
+          </ModalForm>
+        </>
       </div>
       <Footer />
     </div>
